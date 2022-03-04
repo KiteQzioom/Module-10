@@ -49,7 +49,7 @@ class TodosSQL:
     def __init__(self):
         """
             -- zadanie table
-        CREATE TABLE IF NOT EXISTS tasks (
+        CREATE TABLE IF NOT EXISTS todos (
             id integer PRIMARY KEY,
             title VARCHAR(250) NOT NULL,
             description TEXT,
@@ -58,6 +58,15 @@ class TodosSQL:
         """ 
 
     def create_connection(self, todos_db):
+        """
+            -- zadanie table
+        CREATE TABLE IF NOT EXISTS todos (
+            id integer PRIMARY KEY,
+            title VARCHAR(250) NOT NULL,
+            description TEXT,
+            done VARCHAR(15) NOT NULL,
+        );  
+        """ 
         conn = None
         try:
             conn = sqlite3.connect(todos_db)
@@ -74,29 +83,29 @@ class TodosSQL:
         except Error as e:
             print(e)
 
-    def get(conn, status):
+    def get(self, conn, id):
         cur = conn.cursor()
-        cur.execute("SELECT * FROM tasks WHERE status=?", (status,))
+        cur.execute("SELECT * FROM todos WHERE id=?", (id,))
 
         rows = cur.fetchall()
         return rows
 
-    def get_all(conn, table):
+    def get_all(self, conn, table):
         cur = conn.cursor()
         cur.execute(f"SELECT * FROM {table}")
         rows = cur.fetchall()
 
         return rows
 
-    def create(conn, todo):
-        sql = '''INSERT INTO tasks(title, description, done)
+    def create(self, conn, todo):
+        sql = '''INSERT INTO todos(title, description, done)
                     VALUES(?,?,?)'''
         cur = conn.cursor()
         cur.execute(sql, todo)
         conn.commit()
         return cur.lastrowid
 
-    def delete(conn, table, **kwargs):
+    def delete(self, conn, table, **kwargs):
         qs = []
         values = tuple()
         for k, v in kwargs.items():
@@ -110,7 +119,7 @@ class TodosSQL:
         conn.commit()
         print("Deleted")
 
-    def update(conn, table, id, **kwargs):
+    def update(self, conn, table, id, **kwargs):
         parameters = [f"{k} = ?" for k in kwargs]
         parameters = ", ".join(parameters)
         values = tuple(v for v in kwargs.values())
