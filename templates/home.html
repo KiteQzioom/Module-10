@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <style>
+        table, th, tr, td {border: 1px solid black;}
+    </style>
+</head>
+  <body>
+    <h1>Add book</h1>
+    <form method="POST" action="/">
+      <input type="text" name="title" placeholder="title">
+      <input type="number" name="year" placeholder="year">
+      <input type="number" name="borrowed" placeholder="borrowed?, 0 for no, 1 for yes">
+      <input type="text" name="by_whom" placeholder="by_whom">
+      <input type="number" name="when" placeholder="when">
+      <input type="submit" value="Add">
+    </form>
+    <h1>Books</h1>
+    <table>
+      {% for book in books %}
+        <tr>
+          <td>
+            {{book.title}}
+            {{book.year}}
+            {{book.borrowed}}
+            {{book.by_whom}}
+            {{book.when}}
+          </td>
+          <td>
+            <form method="POST" action="./update" style="display: inline">
+              <input type="hidden" value="{{book.title}}" name="oldtitle">
+              <input type="text" value="{{book.title}}" name="newtitle">
+              <input type="hidden" value="{{book.year}}" name="oldyear">
+              <input type="number" value="{{book.year}}" name="newyear">
+              <input type="hidden" value="{{book.borrowed}}" name="oldborrowed">
+              <input type="number" value="{{book.borrowed}}" name="newborrowed">
+              <input type="hidden" value="{{book.by_whom}}" name="oldby_whom">
+              <input type="text" value="{{book.by_whom}}" name="newby_whom">
+              <input type="hidden" value="{{book.when}}" name="oldwhen">
+              <input type="number" value="{{book.when}}" name="newwhen">
+              <input type="submit" value="Update">
+            </form>
+          </td>
+          <td>
+            <form method="POST" action="./delete" style="display: inline">
+              <input type="hidden" value="{{book.title}}" name="title">
+              <input type="submit" value="Delete">
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+  </body>
+</html>
